@@ -1,0 +1,13 @@
+extends ./layout
+
+block body
+	#wrap-app
+
+	//- src react
+	script(src="/js/JSXTransformer.js")
+	script(src="/js/react.min.js")
+
+	//- src main-app
+	script(src="/js/DestModel.js")
+	script(type="text/jsx", src="/js/map-component.js")
+	script(type="text/jsx", src="/js/main-app.js")

@@ -1,0 +1,24 @@
+doctype html
+html
+	head
+		title My app
+
+		// Viewport mobile tag for sensible mobile support
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
+		link(rel="stylesheet", type="text/css", href="components/bootstrap/css/bootstrap.min.css")
+		link(rel="stylesheet", type="text/css", href="components/font-awesome/css/font-awesome.min.css")
+		link(rel="stylesheet", type="text/css", href="styles/style.css")
+
+		block styles
+
+	body
+		header
+			nav(role="navigation").navbar.navbar-default.navbar-fixed-top
+				a(href="/").navbar-brand Trippy
+				ul.nav.navbar-nav
+					li.active
+						a(href="#") Home
+					li
+						a(href="#") My Profile
+
+		block body
