@@ -97,7 +97,7 @@ var App = React.createClass({
 	render: function() {
 		return(
 			<div id="app">
-				<MapComponent />
+				<MapComponent addList={this._addDestination} />
 				
 				<div id="input-search-box">
 					<input type="text" name="search-place" id="search-place" className="form-control" />
