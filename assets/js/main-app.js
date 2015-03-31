@@ -1,44 +1,3 @@
-var cities = [
-	{
-		id: 1, cost: '50000', name: 'Jatim Park 1'
-	}, {
-		id: 2, cost: '75000', name: 'Jatim Park 2'
-	}, {
-		id: 3, cost: '3000', name: 'Museum Brawijaya'
-	}, {
-		id: 4, cost: '60000', name: 'Ecogreen'
-	}, {
-		id: 5, cost: '0', name: 'Malang Tempo Doeloe'
-	}, {
-		id: 6, cost: '17500', name: 'Oleh-oleh Lancar Jaya'
-	}, {
-		id: 7, cost: '4000', name: 'Ketan Legend'
-	}
-];
-
-//- Wrapper nampilkan kota
-var WrapCities = React.createClass({
-	render: function() {
-		var rows = this.props.data;
-		var addList = this.props.addList;
-		return (
-			<div id="cities">
-				<h3>Daptar Qota</h3>
-				<ul className="list-inline">
-					{rows.map(function(row) {
-						return (
-							<li>
-								<input type="text" name="blabla" placeholder="isi waktu" className="form-control" />
-								<button className="city btn" onClick={addList.bind(this, row)}>{row.name}</button>
-							</li>
-						)
-					})}
-				</ul>
-			</div>
-		);
-	}
-});
-
 //- List destinasi mau kemana aja
 var Destinations = React.createClass({
 	render: function() {
@@ -109,14 +68,12 @@ var App = React.createClass({
 						<Total totalCost={this.props.model.totalCost} />
 					</div>
 				</aside>
-				<div id="right">
-					<WrapCities data={cities} addList={this._addDestination} />
-				</div>
 			</div>
 		)
 	}
 });
 
+// Inisialiasi
 var model = new DestModel('travel-app');
 
 React.render(
