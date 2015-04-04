@@ -121,6 +121,7 @@ var MapComponent = React.createClass({
 				if (status == google.maps.places.PlacesServiceStatus.OK) {
 					for (var i = 0; i < results.length; i++) {
 						var place = results[i];
+						place.cost = 50000;
 						// create and animate drop
 						/*setTimeout(function() {
 							_createMarker(place);
@@ -156,13 +157,18 @@ var MapComponent = React.createClass({
 			google.maps.event.addListener(marker, 'click', function() {
 
 				infowindow.setContent( div );
-				var buttonDom = '';
 				infowindow.open(map, this);
 			});
 
 			btn.addEventListener('click', function() {
 				_this.props.addList(place);
 			});
+
+			/*google.maps.event.addListener(marker, 'click', function() {
+
+				infowindow.setContent( _this.renderInfoWindow(place) );
+				infowindow.open(map, this);
+			});*/
 		};
 
 		var _clearMarkers = function() {
@@ -180,6 +186,16 @@ var MapComponent = React.createClass({
 			infowindow: infowindow
 		});
 	},
+
+	/*renderInfoWindow: function(place) {
+		return(
+			<div>
+				<h4>{place.name}</h4>
+				<p>{place.cost}</p>
+				<button className="btn btn-danger btn-block" onClick={this.props.addList.bind(this, place)}>Save it !! </button>
+			</div>
+		)
+	},*/
 
 	render: function() {
 		return (

@@ -1,0 +1,43 @@
+doctype html
+html
+	head
+		title Vacation culinares, sightseeings, hotels | Trippy
+
+		// Viewport mobile tag for sensible mobile support
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
+		link(rel="stylesheet", type="text/css", href="components/bootstrap/css/bootstrap.min.css")
+		link(rel="stylesheet", type="text/css", href="components/font-awesome/css/font-awesome.min.css")
+		link(rel="stylesheet", type="text/css", href="styles/style.css")
+
+		block styles
+
+	body
+
+		#hero-wrapper
+			header
+				nav(role="navigation").navbar.navbar-default.navbar-static-top.navbar-transparent
+					.container-fluid
+						a(href="/").navbar-brand Trippy
+						ul.nav.navbar-nav.navbar-right
+							li
+								a(href="#") Sign up
+							li
+								a(href="#") Log in
+							li
+								a(href="#") My Profile
+
+			#hero-text.text-center
+				h1 Welcome to Trippy
+				h3 Search for unique places during your trip
+
+			#hero-search-box
+				.container
+					.row
+						.col-sm-8.col-sm-offset-2
+							form(action='/search', method='POST', role='form')
+								.form-group
+									label.sr-only(for='') label
+									.input-group
+										input.form-control.input-lg(type='text', placeholder='Malang')
+										.input-group-btn
+											button.btn.btn-danger.btn-lg(type='submit') Search
