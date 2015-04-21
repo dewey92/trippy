@@ -34,7 +34,26 @@ module.exports.routes = {
 
   '/': {
     view: 'index'
-  }
+  },
+
+  // Main app
+  '/main' : {
+    view: 'main-app'
+  },
+
+  'get /login': 'AuthController.login',
+  'get /logout': 'AuthController.logout',
+  'get /register': 'AuthController.register',
+
+  // login biasa
+  'post /auth/local': 'AuthController.callback',
+  'post /auth/local/:action': 'AuthController.callback',
+
+  'get /auth/:provider': 'AuthController.provider',
+  'get /auth/:provider/callback': 'AuthController.callback',
+
+  'get /city/:cityName' : 'Place.cityInformation', // informasi kotanya (ambil informasi kota secara umum)
+  'get /places/:cityName' : 'Place.getPlacesByCity' // get API (ambil daftar tempat2 di suatu kota)
 
   /***************************************************************************
   *                                                                          *

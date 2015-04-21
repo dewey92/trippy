@@ -1,17 +1,27 @@
 //- List destinasi mau kemana aja
 var Destinations = React.createClass({
 	render: function() {
-		var myDestinations = this.props.destinationList; // bentuknya array
+		var destList = this.props.destList; // bentuknya array
 		var unList = this.props.unList;
 
 		return (
-			<div id="destinations">
-				<h4>My Destinations</h4>
+			<div id="destinations">		
+				<h3 className="text-center">My Destinations</h3>
+				<div className="image-container">
+					<img src="/images/Malang.jpg" className="img img-responsive" />
+				</div>
+
+				{ this.props.children }
+
 				<ul className="list-unstyled">
-					{myDestinations.map(function(myDestination, index) {
+					{destList.map(function( place, index ) {
 						return (
-							<li>
-								{myDestination.name} [<span style={ {color: 'blue', cursor: 'pointer'} } href="#" title="delete city" onClick={unList.bind(this, myDestination, index)}>ga jadi kesini</span>]
+							<li key={ place.id }>
+								{place.name} -
+								<span style={ {color: 'blue', cursor: 'pointer'} } 
+									href="#" title="delete city"
+									onClick={ unList.bind( null, place, index ) }> ga jadi kesini
+								</span>
 							</li>
 						)
 					})}
@@ -27,7 +37,7 @@ var Total = React.createClass({
 	render: function() {
 		return (
 			<div id="total">
-				<h5>Rp. {this.props.totalCost},-</h5>
+				<h4>Total <span className="pull-right">Rp. {this.props.totalCost},-</span></h4>
 			</div>
 		);
 	}
@@ -35,37 +45,117 @@ var Total = React.createClass({
 
 var App = React.createClass({
 
-	//- pas user nambah destinasi
-	_addDestination: function(itemToAdd) {
-		this.props.model.addDest(itemToAdd);
+	getInitialState: function () {
+		return {
+			destList: [],
+			totalCost: 0
+		};
+	},
 
-		this.forceUpdate();
+	//- pas user nambah destinasi
+	addDestination: function( placeToAdd ) {
+
+		//this.props.model.addDest(itemToAdd);
+		//this.forceUpdate();
+		var dst_tmp = this.state.destList;
+		var tc_tmp = this.state.totalCost;
+
+		var price = 0;
+
+		// Kalo kategorinya kuliner
+		if ( placeToAdd.category == 'Culinary' )
+			price = 12000;
+		else
+			price = placeToAdd.day.friday.price;
+
+		dst_tmp.push( placeToAdd );
+
+		this.setState({
+			destList: dst_tmp, // Nambahan tujuan wisata
+			totalCost: tc_tmp + parseInt( price ) // Kalkulasi biaya total
+		});
+
 	},
 
 	//- hapus destinasi
-	_deleteDestination: function(itemToDelete, index) {
+	deleteDestination: function( placeToDelete, index ) {
 
 		//- pop up to ensure user to delete
 		//- ## code ##
 
-		this.props.model.deleteDest(index);
-		this.forceUpdate();
+		var dst_tmp = this.state.destList;
+		var tc_tmp = this.state.totalCost;
+
+		var price = 0;
+
+		// Kalo kategorinya kuliner
+		if ( placeToDelete.category == 'Culinary' )
+			price = 12000;
+		else
+			price = placeToDelete.day.friday.price;
+
+		// Kalo dioper dari tombol popup di map
+		if ( index == null ) {
+			// Cari place_id nya di array
+			for (var i = 0; i < this.state.destList.length; i++) {
+
+				if ( this.state.destList[i].id === placeToDelete.id ) {
+					index = i;
+					break;
+				}
+			} // end for destList.length
+		}
+		// Kalo dioper dari daftar listnya
+		else {
+			// Cukup ubah state tombol aja
+		}
+
+		// hapus array
+		dst_tmp.splice( index, 1 );
+
+		console.log( dst_tmp );
+
+		this.setState({
+			destList: dst_tmp, // Nambahan tujuan wisata
+			totalCost: tc_tmp - parseInt( price ) // Kalkulasi biaya total
+		});
+
+	},
+
+	componentDidMount: function () {
+
+		// Set toggle
+		$('#toggle-dest-list').click( function() {
+			$('#map-canvas').toggleClass('open');
+			$('#wrap-dest-list').toggleClass('open');
+		});
+
 	},
 
 	//- rendering
 	render: function() {
+
 		return(
 			<div id="app">
-				<MapComponent addList={this._addDestination} />
-				
-				<div id="input-search-box">
-					<input type="text" name="search-place" id="search-place" className="form-control" />
-				</div>
-				<aside id="left">
-					<div className="container-fluid">
-						<Destinations destinationList={this.props.model.destList} unList={this._deleteDestination} />
-						<br/>
-						<Total totalCost={this.props.model.totalCost} />
+				<MapComponent
+					addList={ this.addDestination }
+					unList={ this.deleteDestination } />
+
+				<aside id="wrap-dest-list" className="open">
+					<div id="dest-list">
+						<div className="container-fluid">
+							<Destinations
+								destList={ this.state.destList }
+								unList={ this.deleteDestination } >
+
+								<Total totalCost={ this.state.totalCost } />
+
+							</Destinations>
+						</div>
+					</div>
+					<div id="toggle-dest-list">
+						<span className="fa fa-chevron-right"></span>
+						<span>My Trips</span>
 					</div>
 				</aside>
 			</div>
@@ -74,9 +164,9 @@ var App = React.createClass({
 });
 
 // Inisialiasi
-var model = new DestModel('travel-app');
+//var model = new DestModel('travel-app');
 
 React.render(
-	<App model={model} />,
+	<App />,
 	document.getElementById('wrap-app')
 );

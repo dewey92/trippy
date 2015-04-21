@@ -12,13 +12,14 @@
  * 		https://github.com/gruntjs/grunt-contrib-watch
  *
  */
+
 module.exports = function(grunt) {
 
 	grunt.config.set('watch', {
 		api: {
 
 			// API files to watch:
-			files: ['api/**/*', '!**/node_modules/**']
+			files: ['api/**', '!**/node_modules/**']
 		},
 		assets: {
 

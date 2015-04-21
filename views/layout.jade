@@ -5,20 +5,35 @@ html
 
 		// Viewport mobile tag for sensible mobile support
 		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
-		link(rel="stylesheet", type="text/css", href="components/bootstrap/css/bootstrap.min.css")
-		link(rel="stylesheet", type="text/css", href="components/font-awesome/css/font-awesome.min.css")
-		link(rel="stylesheet", type="text/css", href="styles/style.css")
+		link(rel="stylesheet", type="text/css", href="/components/bootstrap/css/bootstrap.min.css")
+		link(rel="stylesheet", type="text/css", href="/components/font-awesome/css/font-awesome.min.css")
+		link(rel="stylesheet", type="text/css", href="/styles/style.css")
 
 		block styles
 
 	body
 		header
-			nav(role="navigation").navbar.navbar-default.navbar-fixed-top
-				a(href="/").navbar-brand Trippy
-				ul.nav.navbar-nav
-					li.active
-						a(href="#") Home
-					li
-						a(href="#") My Profile
+			nav(role="navigation").navbar.navbar-inverse.navbar-fixed-top
+				.navbar-header
+					button.navbar-toggle.collapsed(type="button", data-toggle="collapse" data-target="#kolaps")
+						span.sr-only Toggle navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand(href="/") Trippy
+
+				.collapse.navbar-collapse#kolaps
+					ul.nav.navbar-nav
+						li.active
+							a(href="#") Home
+						li
+							a(href="#") My Profile
+					form.navbar-form.navbar-left(action='http://localhost:1337/city/', method='get', role='search')
+						.form-group
+							label.sr-only(for='cityName') Search city
+							.input-group
+								input.form-control#cityName(type='text', name='cityName', placeholder='Type destination city..')
+								.input-group-btn
+									input.btn.btn-default(type='submit', value='Search')
 
 		block body

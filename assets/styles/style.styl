@@ -1,8 +1,37 @@
 box-shadow()
-	box-shadow 0 0 12px #999
+	box-shadow -3px 0 10px #999
+	
+transform()
+	-webkit-transform arguments
+	-moz-transform arguments
+	-o-transform arguments
+	transform arguments
+	
+transition()
+	-webkit-transition arguments
+	-moz-transition arguments
+	-o-transition arguments
+	transition arguments
 
 html, body
 	height 100%
+	//font-family 'Museo Thin'
+
+/*@font-face
+	font-family 'Museo Thin'
+	src url(../fonts/museosans100.woff) format("woff")
+	font-weight 400
+	font-style normal
+
+@font-face
+	font-family 'Museo Fat'
+	src url(../fonts/museosans700.woff) format("woff")
+	font-weight 400
+	font-style normal*/
+
+h1,h2,h3,h4,h5,h6
+	color inherit
+	//font-family 'Museo Fat'
 	
 .navbar-transparent
 	background-color transparent
@@ -13,10 +42,17 @@ html, body
 #hero-wrapper
 	position relative
 	height 600px
-	background-color #b84d45
+	background-color rgba(184,77,69, 0.5)
 	
 	#hero-text
 		padding-top 100px
+		
+		h1
+			font-size 50px
+			color white
+		h3
+			font-size 40px
+			color white
 	
 	#hero-search-box
 		position absolute
@@ -28,10 +64,11 @@ html, body
 	
 #wrap-app
 	position absolute
-	top 65px
+	top 51px
 	bottom 0
 	left 0
 	right 0
+	overflow hidden
 
 	#map-canvas
 		position absolute
@@ -40,28 +77,49 @@ html, body
 		left 0
 		right 0
 		z-index 1
-	
-	#input-search-box
-		position absolute
-		top 20px
-		left 300px
-		background-color white
-		width 40%
-		z-index 20
-		padding 0 10px 10px
-		box-shadow()
+		transition all .25s ease-in-out .25s;
 		
-	#left
+	#map-canvas.open
+		right 320px
+		
+	#wrap-dest-list
+		position absolute
+		top 0
+		right 0
+		bottom 0
+		width 320px
+		z-index 10
+		background-color #f9f9f9
+		box-shadow()
+		transform translate(320px,0)
+		/*-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;*/
+		transition transform .25s ease-in-out .25s;
+		
+		#dest-list
 			position absolute
-			top 20px
-			left 20px
-			bottom 40px
+			top 0
+			left 0
+			right 0
+			bottom 0
 			padding 8px
-			width 250px
-			background-color white
 			overflow auto
-			z-index 10
+			z-index 12
+		
+		#toggle-dest-list
+			position absolute
+			top 20%
+			right 320px
+			border-radius 7px 0 0 7px
+			cursor pointer
+			z-index 11
+			background-color #f9f9f9
+			padding 10px
 			box-shadow()
+		
+	#wrap-dest-list.open
+		transform translate(0,0)
 			
 	/*#right
 		position absolute
@@ -72,3 +130,8 @@ html, body
 		padding 15px
 		overflow auto
 		z-index 12*/
+			
+.place-popup
+	//min-width 180px
+	border-radius 3px
+	background white
