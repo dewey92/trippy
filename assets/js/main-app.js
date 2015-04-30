@@ -1,11 +1,13 @@
 //- List destinasi mau kemana aja
 var Destinations = React.createClass({
-	render: function() {
-		var destList = this.props.destList; // bentuknya array
-		var unList = this.props.unList;
 
+	handleClick: function( obj ) {
+		this.props.unList( obj );
+	},
+
+	render: function() {
 		return (
-			<div id="destinations">		
+			<div id="destinations">
 				<h3 className="text-center">My Destinations</h3>
 				<div className="image-container">
 					<img src="/images/Malang.jpg" className="img img-responsive" />
@@ -14,19 +16,46 @@ var Destinations = React.createClass({
 				{ this.props.children }
 
 				<ul className="list-unstyled">
-					{destList.map(function( place, index ) {
+					{ this.props.destList.map( function( obj, index ) {
 						return (
-							<li key={ place.id }>
-								{place.name} -
-								<span style={ {color: 'blue', cursor: 'pointer'} } 
+							<li key={ obj.props.place.id }>
+								{ index + '. ' + obj.props.place.name } -
+								<span style={ { color: 'blue', cursor: 'pointer' } }
 									href="#" title="delete city"
-									onClick={ unList.bind( null, place, index ) }> ga jadi kesini
+									onClick={ this.handleClick.bind( this, obj ) }> ga jadi kesini
 								</span>
 							</li>
 						)
-					})}
+					}, this ) }
 				</ul>
 			</div>
+		);
+	}
+});
+
+// Control search
+var Control = React.createClass({
+
+	handleSubmit: function( e ) {
+		e.preventDefault();
+
+		var value = React.findDOMNode( this.refs.inputCity ).value;
+		this.props.handleSubmit( value );
+	},
+
+	render: function() {
+		return(
+			<form action="#" method="get" onSubmit={ this.handleSubmit }>
+				<div className="form-group">
+					<label htmlFor="searchCity" className="sr-only">Search City</label>
+					<div className="input-group">
+						<input type="text" id="searchCity" className="form-control" ref="inputCity" placeholder="Type city" />
+						<div className="input-group-btn">
+							<input className="btn btn-danger" type="submit" value="Search" />
+						</div>
+					</div>
+				</div>
+			</form>
 		);
 	}
 });
@@ -43,32 +72,27 @@ var Total = React.createClass({
 	}
 });
 
+// Main app
 var App = React.createClass({
 
 	getInitialState: function () {
 		return {
 			destList: [],
-			totalCost: 0
+			totalCost: 0,
 		};
 	},
 
 	//- pas user nambah destinasi
-	addDestination: function( placeToAdd ) {
+	addDestination: function( elem ) {
 
-		//this.props.model.addDest(itemToAdd);
-		//this.forceUpdate();
 		var dst_tmp = this.state.destList;
 		var tc_tmp = this.state.totalCost;
 
-		var price = 0;
+		var price = ( elem.props.place.category == 'Culinary' ) ? 12000 : elem.props.place.day.friday.price;
 
-		// Kalo kategorinya kuliner
-		if ( placeToAdd.category == 'Culinary' )
-			price = 12000;
-		else
-			price = placeToAdd.day.friday.price;
+		dst_tmp.push( elem );
 
-		dst_tmp.push( placeToAdd );
+		elem.setState({ selected: ! elem.state.selected });
 
 		this.setState({
 			destList: dst_tmp, // Nambahan tujuan wisata
@@ -78,46 +102,32 @@ var App = React.createClass({
 	},
 
 	//- hapus destinasi
-	deleteDestination: function( placeToDelete, index ) {
+	deleteDestination: function( elem ) {
 
 		//- pop up to ensure user to delete
 		//- ## code ##
 
-		var dst_tmp = this.state.destList;
-		var tc_tmp = this.state.totalCost;
+		// Cari array di destList
+		for (var i = 0; i < this.state.destList.length; i++) {
 
-		var price = 0;
+			if ( this.state.destList[i].props.place.id === elem.props.place.id ) {
+				index = i;
+				break;
+			}
+		} // end for destList.length
 
-		// Kalo kategorinya kuliner
-		if ( placeToDelete.category == 'Culinary' )
-			price = 12000;
-		else
-			price = placeToDelete.day.friday.price;
+		var price = ( elem.props.place.category == 'Culinary' ) ? 12000 : elem.props.day.friday.price;
 
-		// Kalo dioper dari tombol popup di map
-		if ( index == null ) {
-			// Cari place_id nya di array
-			for (var i = 0; i < this.state.destList.length; i++) {
-
-				if ( this.state.destList[i].id === placeToDelete.id ) {
-					index = i;
-					break;
-				}
-			} // end for destList.length
-		}
-		// Kalo dioper dari daftar listnya
-		else {
-			// Cukup ubah state tombol aja
-		}
-
-		// hapus array
-		dst_tmp.splice( index, 1 );
-
-		console.log( dst_tmp );
-
+		// delete arraynya
+		this.state.destList.splice( index, 1 );
 		this.setState({
-			destList: dst_tmp, // Nambahan tujuan wisata
-			totalCost: tc_tmp - parseInt( price ) // Kalkulasi biaya total
+			destList  : this.state.destList,
+			totalCost : this.state.totalCost - price
+		});
+
+		// ubah state buttonnya
+		elem.setState({
+			selected : ! elem.state.selected 
 		});
 
 	},
@@ -137,27 +147,38 @@ var App = React.createClass({
 
 		return(
 			<div id="app">
-				<MapComponent
-					addList={ this.addDestination }
-					unList={ this.deleteDestination } />
-
-				<aside id="wrap-dest-list" className="open">
-					<div id="dest-list">
-						<div className="container-fluid">
-							<Destinations
-								destList={ this.state.destList }
-								unList={ this.deleteDestination } >
-
-								<Total totalCost={ this.state.totalCost } />
-
-							</Destinations>
+				<div id="control">
+					<div className="container">
+						<div className="row">
+							<div className="col-md-6 col-md-offset-3">
+								<Control />
+							</div>
 						</div>
 					</div>
-					<div id="toggle-dest-list">
-						<span className="fa fa-chevron-right"></span>
-						<span>My Trips</span>
-					</div>
-				</aside>
+				</div>
+				<div id="main-app">
+					<MapComponent
+						addList={ this.addDestination }
+						unList={ this.deleteDestination } />
+
+					<aside id="wrap-dest-list" className="open">
+						<div id="dest-list">
+							<div className="container-fluid">
+								<Destinations
+									destList={ this.state.destList }
+									unList={ this.deleteDestination } >
+
+									<Total totalCost={ this.state.totalCost } />
+
+								</Destinations>
+							</div>
+						</div>
+						<div id="toggle-dest-list">
+							<span className="fa fa-chevron-right"></span>
+							<span>My Trips</span>
+						</div>
+					</aside>
+				</div>
 			</div>
 		)
 	}
@@ -166,7 +187,21 @@ var App = React.createClass({
 // Inisialiasi
 //var model = new DestModel('travel-app');
 
-React.render(
-	<App />,
-	document.getElementById('wrap-app')
-);
+$(document).ready(function() {
+
+	// Ambil dari URI
+	var pathArray = window.location.pathname.split( '/' );
+	if( pathArray[2] == '') pathArray[2] = 'Malang';
+
+	$.get( "http://localhost:1337/places/" + pathArray[2], function( data ) {
+		city       = data.city;
+		places     = data.places;
+
+		console.log( city );
+		React.render(
+			<App />,
+			document.getElementById('wrap-app')
+		);
+	});
+
+});

@@ -5,7 +5,6 @@ block styles
 	//-link(rel="stylesheet", type="text/css", href="https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.css")
 
 block body
-	span#cityName(style="display:none; visibility:hidden")= cityName
 	#wrap-app
 
 	//- src react
@@ -13,7 +12,7 @@ block body
 	script(src="/js/react.js")
 
 	//- src jquery
-	script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js")
+	script(src="//code.jquery.com/jquery-2.1.3.min.js")
 
 	//- map pake native leaflet
 	script(src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js")
@@ -24,13 +23,10 @@ block body
 	script(type="text/jsx", src="/js/map-component-leaflet.js")
 	script(type="text/jsx", src="/js/main-app.js")
 
-	//- script(type="application/javascript").
-	//- 	$(function() {
-	//- 		$('#toggle-dest-list').click( function() {
-	//- 			$('#map-canvas').toggleClass('open');
-	//- 			$('#wrap-dest-list').toggleClass('open');
-	//- 		});
-	//- 	})
-
 	//- src mapbox
 	//-script(src="https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.js")
+
+	script.
+		var mountedApp;
+		var city;
+		var places;
